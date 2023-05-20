@@ -1,17 +1,21 @@
 import logo from "./logo.svg";
 import "./App.css";
 import React, { useState, useEffect } from "react";
+import Test from "./videos/test.mp4";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
+  const [playVideo, setPlayVideo] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [tag, setTag] = useState("");
 
   useEffect(() => {
     if (inputValue.toLowerCase() === "mulai") {
-      doAction();
+      // Memulai pemutaran video ketika kata 'mulai' terdeteksi
+      setPlayVideo(true);
+      setShowSuccess(true);
+      setInputValue("");
     } else {
-      resetState();
+      setShowSuccess(false);
     }
   }, [inputValue]);
 
@@ -19,31 +23,16 @@ function App() {
     setInputValue(e.target.value);
   };
 
-  const doAction = () => {
-    console.log("Aksi dilakukan!");
-
-    setShowSuccess(true);
-
-    setTag("baru");
-  };
-
-  const resetState = () => {
-    setShowSuccess(false);
-    setTag("");
-  };
-
   return (
     <div>
       <input type="text" value={inputValue} onChange={handleInputChange} />
-      {showSuccess && (
-        <iframe
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/91vECNhvmMY?start=0&autoplay=1"
-          title="YouTube Video Player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
+      {playVideo && (
+        <div>
+          <video width="560" height="315" controls autoPlay>
+            <source src={Test} type="video/mp4" />
+          </video>
+          {showSuccess && <p>Berhasil!</p>}
+        </div>
       )}
     </div>
   );
