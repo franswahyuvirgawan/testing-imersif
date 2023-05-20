@@ -9,14 +9,19 @@ function App() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      setInputValue("");
+    }, 1000);
+
     if (inputValue.toLowerCase() === "mulai") {
-      // Memulai pemutaran video ketika kata 'mulai' terdeteksi
       setPlayVideo(true);
       setShowSuccess(true);
       setInputValue("");
     } else {
       setShowSuccess(false);
     }
+
+    return () => clearTimeout(timeout);
   }, [inputValue]);
 
   const handleInputChange = (e) => {
