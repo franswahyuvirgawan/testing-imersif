@@ -1,9 +1,8 @@
 import logo from "./logo.svg";
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import Lagu1 from "./videos/test.mp4";
-import Lagu2 from "./videos/ganti.mp4";
-import Lagu3 from "./videos/play.mp4";
+import next from "./videos/next.mp4";
+import ganti from "./videos/ganti.mp4";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -11,6 +10,7 @@ function App() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [videoSource, setVideoSource] = useState("");
   const [videoKey, setVideoKey] = useState(0);
+  const [isVolumeOn, setIsVolumeOn] = useState(false);
 
   useEffect(() => {
     // Memeriksa apakah browser mendukung Speech Recognition API
@@ -25,18 +25,18 @@ function App() {
           event.results[event.results.length - 1][0].transcript;
         setInputValue(transcript.toLowerCase());
 
-        if (transcript.toLowerCase().includes("halo")) {
+        if (transcript.toLowerCase().includes("next")) {
           setPlayVideo(true);
           setShowSuccess(true);
-          setVideoSource(Lagu1);
-        } else if (transcript.toLowerCase().includes("hola")) {
-          setVideoSource(Lagu2);
+          setVideoSource(next);
+          recognition.continuous = true; // Mendeteksi suara terus-menerus
+          recognition.interimResults = true; // Menghasilkan hasil interim saat pengguna berbicara
+        } else if (transcript.toLowerCase().includes("ganti")) {
           setPlayVideo(true);
           setShowSuccess(true);
-        } else if (transcript.toLowerCase().includes("hai")) {
-          setVideoSource(Lagu3);
-          setPlayVideo(true);
-          setShowSuccess(true);
+          setVideoSource(ganti);
+          recognition.continuous = true; // Mendeteksi suara terus-menerus
+          recognition.interimResults = true; // Menghasilkan hasil interim saat pengguna berbicara
         }
       };
 
@@ -52,10 +52,15 @@ function App() {
     }
   }, [inputValue]);
 
+  const handleVolumeChange = () => {
+    setIsVolumeOn(true);
+  };
+
   return (
-    <div>
+    <div className="bg-black w-full h-screen">
       <input
         type="text"
+        hidden
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />
@@ -63,11 +68,12 @@ function App() {
         <div>
           <video
             key={videoKey}
-            width="560"
-            height="315"
+            width="100%"
+            height="100vh"
             controls
             autoPlay
-            muted
+            muted={!isVolumeOn}
+            onVolumeChange={handleVolumeChange}
           >
             <source src={videoSource} type="video/mp4" />
           </video>
