@@ -77,7 +77,6 @@ function App() {
           >
             <source src={videoSource} type="video/mp4" />
           </video>
-          {showSuccess && <p>Berhasil!</p>}
         </div>
       )}
     </div>
